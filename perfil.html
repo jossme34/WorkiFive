@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil Profesional</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+
+    header {
+  background-color: #001f3f;
+  color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header h1 {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.logout-btn {
+  background: #ffffff44;
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #ffffff66;
+}
+
+
+    main {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 16px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .info p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .info strong {
+      color: #333;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #trabajoFormContainer {
+      margin-top: 20px;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: none;
+    }
+
+    .trabajo {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border: 1px solid #ddd;
+    }
+
+    .trabajo h3 {
+      margin: 0 0 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html">← Volver</a>
+    <h1>Perfil Profesional</h1>
+    <button class="logout-btn" onclick="cerrarSesion()">Cerrar sesión</button>
+  </header>
+
+  <main>
+    <div class="card" id="perfilContainer">
+      <!-- Contenido dinámico -->
+    </div>
+  </main>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const nombre = urlParams.get('nombre');
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    function cerrarSesion() {
+      localStorage.removeItem('usuario');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 100); // pequeño retardo para asegurar que se borre
+    }
+
+    function mostrarFormularioTrabajo() {
+      document.getElementById('trabajoFormContainer').style.display = 'block';
+    }
+
+    function publicarTrabajo() {
+      const titulo = document.getElementById('trabajoTitulo').value;
+      const descripcion = document.getElementById('trabajoDescripcion').value;
+
+      if (titulo && descripcion) {
+        const trabajos = JSON.parse(localStorage.getItem('trabajos') || '[]');
+        trabajos.push({
+          nombre: usuario.nombre,
+          titulo,
+          descripcion
+        });
+
+        localStorage.setItem('trabajos', JSON.stringify(trabajos));
+        document.getElementById('trabajoTitulo').value = '';
+        document.getElementById('trabajoDescripcion').value = '';
+        document.getElementById('trabajoFormContainer').style.display = 'none';
+
+        mostrarTrabajos(usuario.nombre);
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+
+    function mostrarTrabajos(nombre) {
+      const trabajos = JSON.parse(localStorage.getItem('trabajos') || '[]');
+      const contenedor = document.getElementById('trabajosContainer');
+      contenedor.innerHTML = '';
+
+      trabajos.filter(t => t.nombre === nombre).forEach(trabajo => {
+        const div = document.createElement('div');
+        div.className = 'trabajo';
+        div.innerHTML = `
+          <h3>${trabajo.titulo}</h3>
+          <p>${trabajo.descripcion}</p>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    // Renderizar perfil
+    if (usuario && usuario.nombre === nombre) {
+      const contenedor = document.getElementById('perfilContainer');
+
+      contenedor.innerHTML = `
+        <h2>${usuario.nombre}</h2>
+        <div class="info">
+          <p><strong>Oficio:</strong> ${usuario.oficio}</p>
+          <p><strong>Descripción:</strong> ${usuario.descripcion}</p>
+          <p><strong>Ubicación:</strong> ${usuario.ubicacion}</p>
+        </div>
+
+        ${usuario.perfil === 'freelancer' ? `
+          <button onclick="mostrarFormularioTrabajo()">Publicar trabajo</button>
+          <div id="trabajoFormContainer" style="display:none;">
+            <h3>Nuevo Trabajo</h3>
+            <input type="text" id="trabajoTitulo" placeholder="Título del trabajo" required>
+            <textarea id="trabajoDescripcion" placeholder="Descripción del trabajo" required></textarea>
+            <button onclick="publicarTrabajo()">Publicar</button>
+          </div>
+          <h3 style="margin-top:30px;">Mis trabajos publicados</h3>
+          <div id="trabajosContainer"></div>
+        ` : ''}
+      `;
+
+      mostrarTrabajos(usuario.nombre);
+    } else {
+      document.getElementById('perfilContainer').innerHTML = "<p>Perfil no encontrado.</p>";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - WorkiFive</title>
+  <link rel="stylesheet" href="registro.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Crear una cuenta</h2>
+    <form id="registroForm" onsubmit="return validarFormulario()">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" required>
+
+      <label for="telefono">Número de teléfono</label>
+      <input type="tel" id="telefono" required>
+
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required>
+
+      <label for="perfil">Tipo de perfil</label>
+      <select id="perfil" required>
+        <option value="">Selecciona una opción</option>
+        <option value="freelancer">Freelancer</option>
+        <option value="contratista">Contratista</option>
+      </select>
+
+      <label for="oficio">Especialidad / Oficio</label>
+      <select id="oficio" required onchange="mostrarCampoOtro()">
+        <option value="">Selecciona tu oficio</option>
+        <option value="electricista">Electricista</option>
+        <option value="fontanero">Fontanero</option>
+        <option value="jardinero">Jardinero</option>
+        <option value="carpintero">Carpintero</option>
+        <option value="pintor">Pintor</option>
+        <option value="niñera">Niñera</option>
+        <option value="limpieza">Limpieza</option>
+        <option value="tecnico">Técnico en computación</option>
+        <option value="otro">Otro</option>
+      </select>
+
+      <label for="otroOficio" id="otroOficioLabel" style="display: none;">Especifica tu oficio</label>
+      <input type="text" id="otroOficio" placeholder="Escribe tu oficio" style="display: none;">
+
+      <label for="ubicacion">Ciudad / Ubicación</label>
+      <input type="text" id="ubicacion" required>
+
+      <label for="descripcion">Descripción personal</label>
+      <textarea id="descripcion" rows="4" placeholder="Describe tu experiencia, habilidades, etc." required></textarea>
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required>
+
+      <label for="confirmarPassword">Confirmar contraseña</label>
+      <input type="password" id="confirmarPassword" required>
+
+      <button type="submit">Registrarse</button>
+    </form>
+  </div>
+
+  <script src="registro.js"></script>
+</body>
+</html>
+

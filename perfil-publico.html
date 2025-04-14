@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil Profesional</title>
+  <link rel="stylesheet" href="perfil-publico.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html">← Volver</a>
+    <h1>Perfil Profesional</h1>
+  </header>
+
+  <main id="perfilContainer"></main>
+
+  <script>
+    const nombre = new URLSearchParams(window.location.search).get('nombre');
+    const trabajos = JSON.parse(localStorage.getItem("trabajos") || "[]");
+    const usuario = trabajos.find(t => t.nombre === nombre);
+
+    if (usuario) {
+      document.getElementById("perfilContainer").innerHTML = `
+        <div class="perfil-box">
+          <img src="${usuario.foto}" class="avatar-grande" alt="${usuario.nombre}">
+          <h2>${usuario.nombre}</h2>
+          <p><strong>Oficio:</strong> ${usuario.oficio}</p>
+          <p><strong>Descripción:</strong> ${usuario.descripcion}</p>
+          <p><strong>Ubicación:</strong> ${usuario.ubicacion}</p>
+          <a href="${usuario.contacto}" target="_blank" class="btn-contactar">Contactar por WhatsApp</a>
+        </div>
+      `;
+    } else {
+      document.getElementById("perfilContainer").innerHTML = "<p>Perfil no encontrado.</p>";
+    }
+  </script>
+</body>
+</html>

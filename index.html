@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkiFive - Encuentra Oficios</title>
+  <link rel="stylesheet" href="index.css" />
+  <link rel="icon" href="worki.png" type="image/png" />
+</head>
+<body>
+
+  <header>
+    <div class="encabezado">
+      <img src="worki.png" alt="Logo WorkiFive" class="logo">
+      <h1 class="titulo">Encuentra trabajos confiables</h1>
+      <div class="espaciador"></div>
+    </div>
+
+    <div id="barraUsuario"></div>
+  </header>
+
+  <main>
+    <section class="job-list" id="jobList"></section>
+  </main>
+
+  <script>
+    const trabajos = [
+      {
+        nombre: "Juan Pérez",
+        oficio: "Fontanero",
+        descripcion: "Arreglo de grifos y tuberías",
+        ubicacion: "Tegucigalpa",
+        foto: "https://randomuser.me/api/portraits/men/32.jpg",
+        contacto: "https://wa.me/50490000000"
+      },
+      {
+        nombre: "Ana Gómez",
+        oficio: "Jardinera",
+        descripcion: "Corte de césped y mantenimiento",
+        ubicacion: "San Pedro Sula",
+        foto: "https://randomuser.me/api/portraits/women/45.jpg",
+        contacto: "https://wa.me/50491111111"
+      },
+      {
+        nombre: "Carlos Ruiz",
+        oficio: "Electricista",
+        descripcion: "Instalación de lámparas y cables",
+        ubicacion: "Comayagua",
+        foto: "https://randomuser.me/api/portraits/men/65.jpg",
+        contacto: "https://wa.me/50492222222"
+      },
+      {
+        nombre: "Luisa Martínez",
+        oficio: "Niñera",
+        descripcion: "Cuidado de niños en casa",
+        ubicacion: "Choluteca",
+        foto: "https://randomuser.me/api/portraits/women/68.jpg",
+        contacto: "https://wa.me/50493333333"
+      },
+      {
+        nombre: "Mario Torres",
+        oficio: "Albañil",
+        descripcion: "Construcción y reparaciones de muros",
+        ubicacion: "La Ceiba",
+        foto: "https://randomuser.me/api/portraits/men/78.jpg",
+        contacto: "https://wa.me/50494444444"
+      },
+      {
+        nombre: "Paula Díaz",
+        oficio: "Cocinera",
+        descripcion: "Cocina tradicional a domicilio",
+        ubicacion: "Gracias",
+        foto: "https://randomuser.me/api/portraits/women/24.jpg",
+        contacto: "https://wa.me/50495555555"
+      },
+      {
+        nombre: "Jorge Rivas",
+        oficio: "Pintor",
+        descripcion: "Pintura de interiores y exteriores",
+        ubicacion: "Santa Rosa",
+        foto: "https://randomuser.me/api/portraits/men/14.jpg",
+        contacto: "https://wa.me/50496666666"
+      },
+      {
+        nombre: "Andrea López",
+        oficio: "Costurera",
+        descripcion: "Arreglos y confección de ropa",
+        ubicacion: "Danlí",
+        foto: "https://randomuser.me/api/portraits/women/38.jpg",
+        contacto: "https://wa.me/50497777777"
+      }
+    ];
+
+    localStorage.setItem("trabajos", JSON.stringify(trabajos));
+
+    function mostrarTrabajos(lista) {
+      const contenedor = document.getElementById("jobList");
+      contenedor.innerHTML = "";
+      lista.forEach(trabajo => {
+        const card = document.createElement("div");
+        card.className = "job-card";
+        card.innerHTML = `
+          <img src="${trabajo.foto}" alt="${trabajo.nombre}" class="avatar">
+          <h3>${trabajo.nombre}</h3>
+          <p><strong>${trabajo.oficio}</strong></p>
+          <p>${trabajo.descripcion}</p>
+          <button onclick="location.href='perfil-publico.html?nombre=${encodeURIComponent(trabajo.nombre)}'">Ver perfil</button>
+        `;
+        contenedor.appendChild(card);
+      });
+    }
+
+    mostrarTrabajos(trabajos);
+  </script>
+
+  <script>
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const barraUsuario = document.getElementById('barraUsuario');
+
+    if (usuario) {
+      barraUsuario.innerHTML = `
+        <span class="saludo">Hola, <strong>${usuario.nombre}</strong></span>
+        <a href="perfil.html?nombre=${encodeURIComponent(usuario.nombre)}">
+          <button>Ver perfil</button>
+        </a>
+        <button onclick="cerrarSesion()">Cerrar sesión</button>
+      `;
+    } else {
+      barraUsuario.innerHTML = `
+        <a href="login.html"><button>Iniciar sesión</button></a>
+      `;
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('usuario');
+      window.location.reload();
+    }
+  </script>
+
+</body>
+</html>
